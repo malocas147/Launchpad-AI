@@ -1254,6 +1254,10 @@ footer strong { color: rgba(255,255,255,0.7); font-weight: 500; }
 
 <script>
 // ── CONFIG ─────────────────────────────────────────────────
+// GROQ API (gratuit) — https://console.groq.com → Sign up → API Keys → Create key
+// Colle ta clé entre les guillemets ci-dessous :
+const GROQ_API_KEY = "COLLE_TA_CLÉ_GROQ_ICI";
+
 // Codes valides par plan (tu les envoies manuellement après paiement)
 const CODES = {
   free:  ["LP-FREE-001","LP-FREE-002","LP-FREE-003","LP-FREE-004","LP-FREE-005"],
@@ -1428,20 +1432,24 @@ Instructions :
   outEl.innerHTML = '';
 
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + GROQ_API_KEY
+      },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
+        model: "llama-3.3-70b-versatile",
+        max_tokens: 1200,
         messages: [{ role: "user", content: prompt }]
       })
     });
     const data = await res.json();
-    const text = data.content?.map(b => b.text || '').join('') || 'Erreur. Réessaie.';
+    if (data.error) throw new Error(data.error.message);
+    const text = data.choices?.[0]?.message?.content || 'Erreur. Réessaie.';
     outEl.textContent = text;
-  } catch {
-    outEl.textContent = 'Erreur de connexion. Vérifie et réessaie.';
+  } catch(e) {
+    outEl.textContent = 'Erreur : ' + (e.message || 'Vérifie ta clé Groq et réessaie.');
   } finally {
     btn.disabled = false;
     loader.classList.remove('active');
