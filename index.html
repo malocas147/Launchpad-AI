@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Launchpad AI — Ton assistant carrière intelligent</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f2eb;
+  --bg2: #edeae0;
+  --ink: #1a1916;
+  --ink2: #4a4840;
+  --muted: #9a9488;
+  --accent: #2d5bff;
+  --accent2: #ff4d2e;
+  --gold: #c8a84b;
+  --border: #ddd9ce;
+  --white: #fdfcf8;
+  --card: #fdfcf8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Syne', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── CURSOR ── */
+* { cursor: none !important; }
+#cursor {
+  width: 10px; height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.15s ease, background 0.2s;
+  transform: translate(-50%, -50%);
+}
+#cursor-ring {
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: left 0.1s ease, top 0.1s ease, transform 0.2s;
+  opacity: 0.5;
+}
+
+/* ── NAV ── */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.4rem 3rem;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.nav-logo span { color: var(--accent); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink2);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--accent); }
+
+.btn-nav {
+  background: var(--ink);
+  color: var(--bg) !important;
+  padding: 0.55rem 1.3rem;
+  border-radius: 3px;
+  font-size: 0.78rem !important;
+  transition: background 0.2s !important;
+}
+.btn-nav:hover { background: var(--accent) !important; color: white !important; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 92vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero-left {
+  padding: 5rem 4rem 5rem 3rem;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-eyebrow {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  width: 28px; height: 1px;
+  background: var(--accent);
+}
+
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+}
+
+h1 em {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.hero-desc {
+  font-size: 1rem;
+  color: var(--ink2);
+  line-height: 1.7;
+  max-width: 420px;
+  margin-bottom: 2.5rem;
+  font-weight: 400;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.9rem 2rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+  border-radius: 3px;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-primary:hover { background: #1a45e8; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(45,91,255,0.3); }
+
+.btn-ghost {
+  background: none;
+  color: var(--ink);
+  border: 1.5px solid var(--border);
+  padding: 0.9rem 2rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  border-radius: 3px;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.btn-ghost:hover { border-color: var(--ink); background: var(--ink); color: var(--bg); }
+
+.hero-stats {
+  display: flex;
+  gap: 2.5rem;
+  margin-top: 3.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.8rem;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-family: 'Geist Mono', monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 0.2rem;
+}
+
+.hero-right {
+  background: var(--ink);
+  height: 100%;
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-right::before {
+  content: '';
+  position: absolute;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(45,91,255,0.2) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.hero-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 380px;
+  backdrop-filter: blur(10px);
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+}
+
+.card-title {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+}
+
+.card-lines { display: flex; flex-direction: column; gap: 0.6rem; }
+
+.line {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+  position: relative;
+}
+
+.line::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; height: 100%;
+  background: var(--accent);
+  border-radius: 4px;
+  animation: grow 2s ease forwards;
+}
+
+@keyframes grow { from { width: 0; } }
+
+.line:nth-child(1)::after { width: 85%; animation-delay: 0.3s; }
+.line:nth-child(2)::after { width: 60%; animation-delay: 0.6s; background: rgba(255,255,255,0.3); }
+.line:nth-child(3)::after { width: 75%; animation-delay: 0.9s; }
+.line:nth-child(4)::after { width: 45%; animation-delay: 1.2s; background: rgba(255,255,255,0.2); }
+.line:nth-child(5)::after { width: 90%; animation-delay: 1.5s; }
+
+.card-badge {
+  margin-top: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(45,91,255,0.2);
+  border: 1px solid rgba(45,91,255,0.3);
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.68rem;
+  color: #7fa0ff;
+  letter-spacing: 0.08em;
+}
+
+/* ── TOOLS SECTION ── */
+#outils {
+  padding: 7rem 3rem;
+  background: var(--white);
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-tag {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.section-title em {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+/* Tool tabs */
+.tool-tabs {
+  display: flex;
+  gap: 0;
+  justify-content: center;
+  margin-bottom: 3rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  display: inline-flex;
+  left: 50%;
+  position: relative;
+  transform: translateX(-50%);
+}
+
+.tool-tab {
+  padding: 0.8rem 1.8rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: var(--ink2);
+  background: none;
+  border: none;
+  border-right: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.tool-tab:last-child { border-right: none; }
+.tool-tab.active { background: var(--ink); color: white; }
+.tool-tab:hover:not(.active) { background: var(--bg2); }
+
+/* Tool panels */
+.tool-panel { display: none; }
+.tool-panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.tool-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.tool-form { display: flex; flex-direction: column; gap: 1rem; }
+
+.field-group { display: flex; flex-direction: column; gap: 0.4rem; }
+
+label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+input[type="text"], select, textarea {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  color: var(--ink);
+  padding: 0.8rem 1rem;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.88rem;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(45,91,255,0.1);
+}
+
+textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239a9488' fill='none' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; }
+
+.btn-generate {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 1rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.btn-generate:hover { background: #1a45e8; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(45,91,255,0.25); }
+.btn-generate:disabled { opacity: 0.45; transform: none; box-shadow: none; }
+
+/* Output */
+.output-panel {
+  background: var(--ink);
+  border-radius: 6px;
+  overflow: hidden;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.output-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.3rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.output-label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+
+.copy-btn {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.5);
+  padding: 0.3rem 0.8rem;
+  border-radius: 3px;
+  transition: all 0.15s;
+}
+.copy-btn:hover { background: rgba(45,91,255,0.2); border-color: var(--accent); color: #7fa0ff; }
+
+.output-body {
+  flex: 1;
+  padding: 1.5rem;
+  font-size: 0.85rem;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.75);
+  white-space: pre-wrap;
+  font-family: 'Syne', sans-serif;
+  font-weight: 400;
+}
+
+.output-placeholder {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: rgba(255,255,255,0.15);
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-align: center;
+  padding: 3rem;
+}
+
+.placeholder-icon { font-size: 2.5rem; opacity: 0.3; }
+
+/* Loading */
+.loader {
+  display: none;
+  padding: 2rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+.loader.active { display: flex; }
+.loader-dot {
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: bounce 0.8s ease-in-out infinite;
+}
+.loader-dot:nth-child(2) { animation-delay: 0.15s; }
+.loader-dot:nth-child(3) { animation-delay: 0.3s; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+/* ── PRICING ── */
+#tarifs {
+  padding: 7rem 3rem;
+  background: var(--bg);
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr 1fr;
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.pricing-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 2rem;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.pricing-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.08); }
+
+.pricing-card.featured {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: white;
+  transform: scale(1.03);
+}
+.pricing-card.featured:hover { transform: scale(1.03) translateY(-4px); }
+
+.plan-tag {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.featured .plan-tag { color: rgba(255,255,255,0.4); }
+
+.popular-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: white;
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.9rem;
+  border-radius: 20px;
+}
+
+.plan-name {
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+}
+
+.plan-price {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 2.8rem;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+
+.plan-price span {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 0;
+}
+
+.featured .plan-price span { color: rgba(255,255,255,0.4); }
+
+.plan-desc {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-bottom: 1.8rem;
+  line-height: 1.5;
+}
+.featured .plan-desc { color: rgba(255,255,255,0.45); }
+
+.plan-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.plan-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.82rem;
+  color: var(--ink2);
+}
+
+.featured .plan-features li { color: rgba(255,255,255,0.7); }
+
+.plan-features li::before {
+  content: '✓';
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 0.78rem;
+  flex-shrink: 0;
+}
+
+.plan-features li.no::before {
+  content: '×';
+  color: var(--muted);
+}
+
+.btn-plan {
+  width: 100%;
+  padding: 0.9rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  border-radius: 4px;
+  border: 1.5px solid var(--border);
+  background: none;
+  color: var(--ink);
+  transition: all 0.2s;
+}
+.btn-plan:hover { background: var(--ink); color: white; border-color: var(--ink); }
+
+.featured .btn-plan {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+.featured .btn-plan:hover { background: #1a45e8; border-color: #1a45e8; }
+
+/* ── PAYWALL MODAL ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,10,8,0.8);
+  backdrop-filter: blur(6px);
+  z-index: 500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal-overlay.active { display: flex; }
+
+.modal {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 2.5rem;
+  max-width: 460px;
+  width: 100%;
+  animation: modalIn 0.3s ease;
+  position: relative;
+}
+@keyframes modalIn { from { opacity:0; transform:scale(0.95) translateY(10px); } to { opacity:1; transform:scale(1) translateY(0); } }
+
+.modal-close {
+  position: absolute;
+  top: 1.2rem; right: 1.5rem;
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  color: var(--muted);
+  line-height: 1;
+}
+.modal-close:hover { color: var(--ink); }
+
+.modal-tag {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.8rem;
+}
+
+.modal h2 {
+  font-weight: 800;
+  font-size: 1.6rem;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.6rem;
+}
+
+.modal-desc {
+  font-size: 0.85rem;
+  color: var(--ink2);
+  line-height: 1.6;
+  margin-bottom: 1.8rem;
+}
+
+.modal-plan-name {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  padding: 0.6rem 1rem;
+  background: var(--bg2);
+  border-radius: 4px;
+}
+
+.modal-steps { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.8rem; }
+
+.modal-step { display: flex; gap: 1rem; align-items: flex-start; }
+
+.step-n {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--accent);
+  line-height: 1.2;
+  min-width: 20px;
+}
+
+.step-body { font-size: 0.83rem; color: var(--ink2); line-height: 1.55; }
+.step-body a { color: var(--accent); font-weight: 600; text-decoration: none; }
+
+.modal-input-row { display: flex; gap: 0.6rem; }
+
+.modal-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  padding: 0.75rem 1rem;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  outline: none;
+  color: var(--ink);
+  transition: border-color 0.2s;
+}
+.modal-input:focus { border-color: var(--accent); }
+.modal-input::placeholder { color: var(--muted); }
+
+.btn-unlock {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.3rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.btn-unlock:hover { background: #1a45e8; }
+
+.modal-note {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 0.8rem;
+}
+
+.modal-error {
+  color: var(--accent2);
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.72rem;
+  margin-top: 0.5rem;
+  display: none;
+}
+
+/* ── LOCKED STATE ── */
+.locked-overlay {
+  position: relative;
+}
+.locked-overlay::after {
+  content: '🔒 Abonnement requis';
+  position: absolute;
+  inset: 0;
+  background: rgba(245,242,235,0.92);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  border-radius: 6px;
+  border: 1.5px dashed var(--border);
+  z-index: 10;
+}
+.locked-overlay.unlocked::after { display: none; }
+
+/* ── FAQ / FOOTER ── */
+#faq {
+  padding: 5rem 3rem;
+  background: var(--white);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--border);
+  padding: 1.5rem 0;
+}
+
+.faq-q {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 0.6rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faq-a {
+  font-size: 0.85rem;
+  color: var(--ink2);
+  line-height: 1.7;
+  display: none;
+}
+.faq-item.open .faq-a { display: block; }
+.faq-item.open .faq-chevron { transform: rotate(180deg); }
+.faq-chevron { transition: transform 0.2s; font-size: 0.7rem; }
+
+footer {
+  background: var(--ink);
+  color: rgba(255,255,255,0.4);
+  padding: 2rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+}
+
+footer strong { color: rgba(255,255,255,0.7); font-weight: 500; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  .hero { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .hero-left { padding: 3rem 1.5rem; }
+  #outils, #tarifs { padding: 4rem 1.5rem; }
+  .tool-layout { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .pricing-card.featured { transform: none; }
+  footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+  #faq { padding: 4rem 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Launchpad<span>AI</span></a>
+  <ul class="nav-links">
+    <li><a href="#outils">Outils</a></li>
+    <li><a href="#tarifs">Tarifs</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#tarifs" class="btn-nav">Commencer</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Assistant carrière IA</div>
+    <h1>Décroche le job.<br>Pas <em>la poubelle.</em></h1>
+    <p class="hero-desc">CV, lettres de motivation, emails pros — générés en 60 secondes par l'IA. Personnalisés, percutants, prêts à envoyer.</p>
+    <div class="hero-ctas">
+      <a href="#outils" class="btn-primary">Essayer gratuitement →</a>
+      <a href="#tarifs" class="btn-ghost">Voir les tarifs</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">3</div>
+        <div class="stat-label">Outils IA</div>
+      </div>
+      <div>
+        <div class="stat-num">60s</div>
+        <div class="stat-label">Par génération</div>
+      </div>
+      <div>
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Personnalisé</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-card">
+      <div class="card-header">
+        <div class="card-dot" style="background:#ff5f56"></div>
+        <div class="card-dot" style="background:#ffbd2e"></div>
+        <div class="card-dot" style="background:#27c93f"></div>
+        <span class="card-title" style="margin-left:0.4rem">CV généré — Alexandre D.</span>
+      </div>
+      <div class="card-lines">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+      </div>
+      <div class="card-badge">✦ Optimisé ATS · Prêt à envoyer</div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section id="outils">
+  <div class="section-header">
+    <span class="section-tag">Les outils</span>
+    <h2 class="section-title">Tout ce qu'il te faut<br>pour <em>décrocher un entretien</em></h2>
+  </div>
+
+  <div style="text-align:center">
+    <div class="tool-tabs">
+      <button class="tool-tab active" onclick="switchTool('cv', this)">📄 CV</button>
+      <button class="tool-tab" onclick="switchTool('lettre', this)">✉️ Lettre de motivation</button>
+      <button class="tool-tab" onclick="switchTool('email', this)">💬 Email pro</button>
+    </div>
+  </div>
+
+  <!-- CV -->
+  <div class="tool-panel active" id="panel-cv">
+    <div class="tool-layout">
+      <div class="tool-form">
+        <div class="field-group">
+          <label>Ton nom complet</label>
+          <input type="text" id="cv-nom" placeholder="Marie Dupont" />
+        </div>
+        <div class="field-group">
+          <label>Poste visé</label>
+          <input type="text" id="cv-poste" placeholder="Développeur Full Stack" />
+        </div>
+        <div class="field-group">
+          <label>Offre d'emploi (colle-la ici)</label>
+          <textarea id="cv-offre" placeholder="Colle l'annonce complète pour un CV ultra-ciblé..." style="min-height:120px"></textarea>
+        </div>
+        <div class="field-group">
+          <label>Ton expérience & compétences</label>
+          <textarea id="cv-exp" placeholder="Tes postes, réalisations, formations, compétences..." style="min-height:130px"></textarea>
+        </div>
+        <button class="btn-generate" onclick="runTool('cv')" id="btn-cv">
+          <span>⚡</span> Générer le CV
+        </button>
+      </div>
+      <div class="output-panel locked-overlay" id="lock-cv">
+        <div class="output-top">
+          <span class="output-label">Résultat</span>
+          <button class="copy-btn" onclick="copyOut('cv-out')">Copier</button>
+        </div>
+        <div class="loader" id="load-cv"><div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div></div>
+        <div class="output-body" id="cv-out">
+          <div class="output-placeholder">
+            <div class="placeholder-icon">📄</div>
+            <span>Ton CV apparaîtra ici</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LETTRE -->
+  <div class="tool-panel" id="panel-lettre">
+    <div class="tool-layout">
+      <div class="tool-form">
+        <div class="field-group">
+          <label>Ton nom</label>
+          <input type="text" id="lm-nom" placeholder="Marie Dupont" />
+        </div>
+        <div class="field-group">
+          <label>Entreprise</label>
+          <input type="text" id="lm-entreprise" placeholder="Google France" />
+        </div>
+        <div class="field-group">
+          <label>Offre d'emploi</label>
+          <textarea id="lm-offre" placeholder="Colle l'annonce ici..." style="min-height:110px"></textarea>
+        </div>
+        <div class="field-group">
+          <label>Pourquoi ce poste / cette entreprise ?</label>
+          <textarea id="lm-pourquoi" placeholder="Tes motivations, points forts, projets pertinents..." style="min-height:110px"></textarea>
+        </div>
+        <div class="field-group">
+          <label>Ton style</label>
+          <select id="lm-style">
+            <option value="professionnel">Professionnel & Confiant</option>
+            <option value="dynamique">Dynamique & Enthousiaste</option>
+            <option value="concis">Court & Percutant</option>
+            <option value="creatif">Créatif & Original</option>
+          </select>
+        </div>
+        <button class="btn-generate" onclick="runTool('lettre')" id="btn-lettre">
+          <span>⚡</span> Générer la lettre
+        </button>
+      </div>
+      <div class="output-panel locked-overlay" id="lock-lettre">
+        <div class="output-top">
+          <span class="output-label">Résultat</span>
+          <button class="copy-btn" onclick="copyOut('lettre-out')">Copier</button>
+        </div>
+        <div class="loader" id="load-lettre"><div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div></div>
+        <div class="output-body" id="lettre-out">
+          <div class="output-placeholder">
+            <div class="placeholder-icon">✉️</div>
+            <span>Ta lettre apparaîtra ici</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMAIL -->
+  <div class="tool-panel" id="panel-email">
+    <div class="tool-layout">
+      <div class="tool-form">
+        <div class="field-group">
+          <label>Type d'email</label>
+          <select id="em-type">
+            <option value="relance">Relance après candidature</option>
+            <option value="remerciement">Remerciement après entretien</option>
+            <option value="networking">Prise de contact / networking</option>
+            <option value="negociation">Négociation de salaire</option>
+            <option value="refus">Refus poli d'une offre</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Destinataire (nom / poste)</label>
+          <input type="text" id="em-dest" placeholder="Sophie Martin, RH chez Airbnb" />
+        </div>
+        <div class="field-group">
+          <label>Contexte</label>
+          <textarea id="em-contexte" placeholder="Décris la situation en quelques lignes..." style="min-height:130px"></textarea>
+        </div>
+        <div class="field-group">
+          <label>Ton nom</label>
+          <input type="text" id="em-nom" placeholder="Marie Dupont" />
+        </div>
+        <button class="btn-generate" onclick="runTool('email')" id="btn-email">
+          <span>⚡</span> Générer l'email
+        </button>
+      </div>
+      <div class="output-panel locked-overlay" id="lock-email">
+        <div class="output-top">
+          <span class="output-label">Résultat</span>
+          <button class="copy-btn" onclick="copyOut('email-out')">Copier</button>
+        </div>
+        <div class="loader" id="load-email"><div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div></div>
+        <div class="output-body" id="email-out">
+          <div class="output-placeholder">
+            <div class="placeholder-icon">💬</div>
+            <span>Ton email apparaîtra ici</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="tarifs">
+  <div class="section-header">
+    <span class="section-tag">Tarifs</span>
+    <h2 class="section-title">Simple.<br><em>Sans surprise.</em></h2>
+  </div>
+  <div class="pricing-grid">
+
+    <div class="pricing-card">
+      <span class="plan-tag">Débutant</span>
+      <div class="plan-name">Gratuit</div>
+      <div class="plan-price">0€ <span>/ mois</span></div>
+      <div class="plan-desc">Pour tester les outils sans engagement.</div>
+      <ul class="plan-features">
+        <li>3 générations / mois</li>
+        <li>CV basique</li>
+        <li class="no">Lettre de motivation</li>
+        <li class="no">Email professionnel</li>
+        <li class="no">Générations illimitées</li>
+      </ul>
+      <button class="btn-plan" onclick="openModal('gratuit')">Commencer gratuit</button>
+    </div>
+
+    <div class="pricing-card featured">
+      <div class="popular-badge">⚡ Populaire</div>
+      <span class="plan-tag">Le plus choisi</span>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">9€ <span>/ mois</span></div>
+      <div class="plan-desc">Pour les candidats sérieux qui postulent activement.</div>
+      <ul class="plan-features">
+        <li>Générations illimitées</li>
+        <li>CV optimisé ATS</li>
+        <li>Lettre de motivation</li>
+        <li>Email professionnel</li>
+        <li>Résultats prioritaires</li>
+      </ul>
+      <button class="btn-plan" onclick="openModal('pro')">Démarrer — 9€/mois</button>
+    </div>
+
+    <div class="pricing-card">
+      <span class="plan-tag">Recruteurs & Coachs</span>
+      <div class="plan-name">Équipe</div>
+      <div class="plan-price">29€ <span>/ mois</span></div>
+      <div class="plan-desc">Pour gérer plusieurs profils et candidats.</div>
+      <ul class="plan-features">
+        <li>Tout le plan Pro</li>
+        <li>Jusqu'à 10 profils</li>
+        <li>Export PDF</li>
+        <li>Support prioritaire</li>
+        <li class="no">API personnalisée</li>
+      </ul>
+      <button class="btn-plan" onclick="openModal('equipe')">Contacter</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-header">
+    <span class="section-tag">Questions fréquentes</span>
+    <h2 class="section-title" style="font-size:2rem">FAQ</h2>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Comment ça marche ? <span class="faq-chevron">▾</span></div>
+    <div class="faq-a">Tu colles l'offre d'emploi et ton expérience. L'IA analyse les deux et génère un document 100% personnalisé et optimisé pour passer les filtres ATS des recruteurs.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Puis-je annuler à tout moment ? <span class="faq-chevron">▾</span></div>
+    <div class="faq-a">Oui, sans condition. Annule quand tu veux depuis ton espace client. Aucun frais caché, aucune période d'engagement.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Mes données sont-elles en sécurité ? <span class="faq-chevron">▾</span></div>
+    <div class="faq-a">Tes données ne sont jamais stockées. Chaque génération est traitée en temps réel et supprimée immédiatement après.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">En quelles langues les documents sont-ils générés ? <span class="faq-chevron">▾</span></div>
+    <div class="faq-a">Français et anglais nativement. L'IA peut aussi s'adapter à d'autres langues si tu l'indiques dans ton contexte.</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div><strong>LaunchpadAI</strong> — Tous droits réservés 2025</div>
+  <div>contact@yourdomain.com</div>
+</footer>
+
+<!-- MODAL PAYWALL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-tag">Accès immédiat</div>
+    <h2>Débloque ton accès</h2>
+    <p class="modal-desc">Suis les étapes ci-dessous pour activer ton abonnement et commencer à générer des documents en quelques secondes.</p>
+    <div class="modal-plan-name" id="modal-plan-display">Plan sélectionné : Pro — 9€/mois</div>
+    <div class="modal-steps">
+      <div class="modal-step">
+        <div class="step-n">1</div>
+        <div class="step-body">Envoie ton paiement sur <a href="https://paypal.me/YOURUSERNAME" target="_blank" id="paypal-link">paypal.me/YOURUSERNAME</a> avec ton email en note</div>
+      </div>
+      <div class="modal-step">
+        <div class="step-n">2</div>
+        <div class="step-body">Tu reçois ton code d'accès par email dans les <strong>5 minutes</strong></div>
+      </div>
+      <div class="modal-step">
+        <div class="step-n">3</div>
+        <div class="step-body">Entre le code ici pour débloquer tous les outils</div>
+      </div>
+    </div>
+    <div class="modal-input-row">
+      <input type="text" class="modal-input" id="modal-code" placeholder="Ex: LP-PRO-001" maxlength="12" />
+      <button class="btn-unlock" onclick="checkAccess()">Débloquer</button>
+    </div>
+    <div class="modal-error" id="modal-error">❌ Code invalide. Vérifie ton email ou contacte le support.</div>
+    <p class="modal-note">Des questions ? contact@yourdomain.com</p>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ─────────────────────────────────────────────────
+// Codes valides par plan (tu les envoies manuellement après paiement)
+const CODES = {
+  free:  ["LP-FREE-001","LP-FREE-002","LP-FREE-003","LP-FREE-004","LP-FREE-005"],
+  pro:   ["LP-PRO-001","LP-PRO-002","LP-PRO-003","LP-PRO-004","LP-PRO-005","LP-PRO-006","LP-PRO-007","LP-PRO-008","LP-PRO-009","LP-PRO-010"],
+  equipe:["LP-TEAM-001","LP-TEAM-002","LP-TEAM-003"]
+};
+
+const ALL_CODES = [...CODES.free, ...CODES.pro, ...CODES.equipe].map(c => c.toUpperCase());
+
+let currentPlan = 'pro';
+let isUnlocked = false;
+
+// ── CURSOR ─────────────────────────────────────────────────
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top = e.clientY + 'px';
+  setTimeout(() => {
+    ring.style.left = e.clientX + 'px';
+    ring.style.top = e.clientY + 'px';
+  }, 60);
+});
+
+// ── TOOL TABS ──────────────────────────────────────────────
+function switchTool(name, el) {
+  document.querySelectorAll('.tool-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tool-panel').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+}
+
+// ── MODAL ──────────────────────────────────────────────────
+const PLAN_LABELS = { gratuit: 'Gratuit — 0€/mois', pro: 'Pro — 9€/mois', equipe: 'Équipe — 29€/mois' };
+const PAYPAL_AMOUNTS = { gratuit: '0', pro: '9', equipe: '29' };
+
+function openModal(plan) {
+  currentPlan = plan;
+  document.getElementById('modal-plan-display').textContent = 'Plan sélectionné : ' + PLAN_LABELS[plan];
+  const amount = PAYPAL_AMOUNTS[plan];
+  document.getElementById('paypal-link').href = `https://paypal.me/YOURUSERNAME/${amount}`;
+  document.getElementById('modal-overlay').classList.add('active');
+  setTimeout(() => document.getElementById('modal-code').focus(), 300);
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('active');
+  document.getElementById('modal-error').style.display = 'none';
+  document.getElementById('modal-code').value = '';
+}
+
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+
+document.getElementById('modal-code').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkAccess();
+});
+
+function checkAccess() {
+  const val = document.getElementById('modal-code').value.trim().toUpperCase();
+  const errEl = document.getElementById('modal-error');
+  if (ALL_CODES.includes(val)) {
+    localStorage.setItem('lp_access', val);
+    isUnlocked = true;
+    unlockAll();
+    closeModal();
+  } else {
+    errEl.style.display = 'block';
+    setTimeout(() => errEl.style.display = 'none', 4000);
+  }
+}
+
+function unlockAll() {
+  ['cv','lettre','email'].forEach(id => {
+    document.getElementById('lock-' + id).classList.add('unlocked');
+  });
+}
+
+// Auto-unlock on load
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('lp_access');
+  if (saved && ALL_CODES.includes(saved.toUpperCase())) {
+    isUnlocked = true;
+    unlockAll();
+  }
+});
+
+// ── GENERATE ───────────────────────────────────────────────
+async function runTool(tool) {
+  if (!isUnlocked) { openModal('pro'); return; }
+
+  let prompt = '';
+
+  if (tool === 'cv') {
+    const nom = document.getElementById('cv-nom').value.trim();
+    const poste = document.getElementById('cv-poste').value.trim();
+    const offre = document.getElementById('cv-offre').value.trim();
+    const exp = document.getElementById('cv-exp').value.trim();
+    if (!exp) { alert('Ajoute ton expérience et tes compétences.'); return; }
+    prompt = `Crée un CV professionnel et optimisé ATS pour ${nom || 'le candidat'} qui postule au poste de "${poste || 'ce poste'}".
+
+OFFRE D'EMPLOI :
+${offre || 'Non fournie'}
+
+EXPÉRIENCE & COMPÉTENCES :
+${exp}
+
+Instructions :
+- Sections claires : Résumé, Expériences, Compétences, Formation
+- Verbes d'action forts, réalisations chiffrées si possible
+- Mots-clés alignés avec l'offre pour passer l'ATS
+- Contenu pour 1 page maximum
+- Format propre, facile à lire
+- Répondre en français`;
+  }
+
+  else if (tool === 'lettre') {
+    const nom = document.getElementById('lm-nom').value.trim();
+    const entreprise = document.getElementById('lm-entreprise').value.trim();
+    const offre = document.getElementById('lm-offre').value.trim();
+    const pourquoi = document.getElementById('lm-pourquoi').value.trim();
+    const style = document.getElementById('lm-style').value;
+    if (!pourquoi) { alert('Explique pourquoi tu veux ce poste.'); return; }
+    prompt = `Rédige une lettre de motivation percutante pour ${nom || 'le candidat'} qui postule chez ${entreprise || 'cette entreprise'}.
+
+OFFRE D'EMPLOI :
+${offre || 'Non fournie'}
+
+MOTIVATIONS & POINTS FORTS :
+${pourquoi}
+
+STYLE : ${style}
+
+Instructions :
+- 3-4 paragraphes, maximum 350 mots
+- Accroche originale — pas "Je me permets de vous contacter..."
+- Spécifique à l'entreprise, pas générique
+- Conclusion avec appel à l'action clair et confiant
+- Zéro cliché ("passionné", "dynamique", "motivé")
+- En français`;
+  }
+
+  else if (tool === 'email') {
+    const type = document.getElementById('em-type').value;
+    const dest = document.getElementById('em-dest').value.trim();
+    const contexte = document.getElementById('em-contexte').value.trim();
+    const nom = document.getElementById('em-nom').value.trim();
+    if (!contexte) { alert('Décris le contexte de ton email.'); return; }
+    prompt = `Rédige un email professionnel de type "${type}" pour ${nom || 'le candidat'} à destination de ${dest || 'son interlocuteur'}.
+
+CONTEXTE :
+${contexte}
+
+Instructions :
+- Objet d'email accrocheur inclus en première ligne (Objet: ...)
+- Ton professionnel mais humain
+- Concis : 5-8 lignes max
+- Formule de politesse adaptée
+- Appel à l'action clair
+- En français`;
+  }
+
+  const btn = document.getElementById('btn-' + tool);
+  const loader = document.getElementById('load-' + tool);
+  const outEl = document.getElementById(tool + '-out');
+
+  btn.disabled = true;
+  loader.classList.add('active');
+  outEl.innerHTML = '';
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.map(b => b.text || '').join('') || 'Erreur. Réessaie.';
+    outEl.textContent = text;
+  } catch {
+    outEl.textContent = 'Erreur de connexion. Vérifie et réessaie.';
+  } finally {
+    btn.disabled = false;
+    loader.classList.remove('active');
+  }
+}
+
+// ── COPY ───────────────────────────────────────────────────
+function copyOut(id) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btns = document.querySelectorAll('.copy-btn');
+    btns.forEach(b => { if (b.getAttribute('onclick')?.includes(id)) { b.textContent = '✓ Copié'; setTimeout(() => b.textContent = 'Copier', 2000); } });
+  });
+}
+
+// ── FAQ ────────────────────────────────────────────────────
+function toggleFaq(el) {
+  el.classList.toggle('open');
+}
+</script>
+</body>
+</html>
